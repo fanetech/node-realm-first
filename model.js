@@ -2,7 +2,7 @@ exports.studentModel = {
   name: "student",
     primaryKey: "_id",
     properties: {
-      _id: "objectId",
+      _id: { type: 'objectId', default: () => new Realm.BSON.ObjectId() },
       name: "string",
       age: "int",
       number: "int?",

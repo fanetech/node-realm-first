@@ -3,7 +3,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const {openRealm} = require('./realmConfig');
-const { getStudent, addStudent, getOneStudent, getAllStudent } = require('./realmQuery');
+const { getStudent, addStudent, getOneStudent, getAllStudent, deleteStudent, updateStudent } = require('./realmQuery');
 
 const exampleEmail = 'john@doe.com';
 const examplePassword = '123456';
@@ -36,6 +36,16 @@ app.post('/', async (req, res) =>{
 
 app.get('/:id', async (req, res) =>{
   const student = await getOneStudent(req.params.id);
+  res.send(student)
+} );
+
+app.delete('/:id', async (req, res) =>{
+  const student = await deleteStudent(req.params.id);
+  res.send(student)
+} );
+
+app.put('/:id', async (req, res) =>{
+  const student = await updateStudent(req.params.id, req.body);
   res.send(student)
 } );
 

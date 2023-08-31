@@ -1,6 +1,6 @@
 const { BSON } = require("realm");
 const { studentModel } = require("./model");
-const { getRealm } = require("./realmConfig");
+const { getRealm, modelChange } = require("./realmConfig");
 const { SYNC_STORE_ID } = require("./atlasAppService/config");
 
 function addStudent(payload) {
@@ -27,7 +27,6 @@ function getStudent() {
 
 function getOneStudent(id) {
     const realm = getRealm();
-    console.log(new BSON.ObjectId(id))
     return realm ? realm.objectForPrimaryKey(studentModel.name, new BSON.ObjectId(id)) : null;
     // return realm ? realm.objects(studentModel.name).filtered('_id = $0', new BSON.ObjectId(id)) : null;
 }
@@ -61,6 +60,12 @@ async function deleteStudent(id) {
 async function updateStudent(id, payload) {
     const realm = getRealm();
     let newCreatedStudent;
+    try {
+        realm.objects(studentModel.name);
+    } catch (error) {
+        console.log("updateStudent error: ", error)
+    }
+    try {
     const student = await getOneStudent(id);
     if (!student) {
         return 'object not found';
@@ -76,6 +81,10 @@ async function updateStudent(id, payload) {
         });
         return newCreatedStudent;
     }
+    } catch (error) {
+        console.log('updateStudent: ', error)
+    }
+    
 }
 
 

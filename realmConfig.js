@@ -18,7 +18,7 @@ function getRealm() {
 const openRealm = async () => {
   try {
     realm = await Realm.open({
-      
+
       schema: [studentModel],
       sync: {
         user: app.currentUser,
@@ -31,11 +31,11 @@ const openRealm = async () => {
           update: (subs, realm) => {
             // Subscribe to the store with the given ID.
             subs.add(
-              realm.objects(studentModel.name).filtered('_id = $0', SYNC_STORE_ID),
+              realm.objects(studentModel.name).filtered('storeId = $0', SYNC_STORE_ID),
               { name: 'storeA' },
             );
           },
-        
+          rerunOnOpen: true,
         },
       }
     });
@@ -103,7 +103,7 @@ async function register(email, password) {
   // to automatically confirm users' emails.
   try {
     console.info('Registering...');
-const registerRes = await app.emailPasswordAuth.registerUser({ email, password });
+    const registerRes = await app.emailPasswordAuth.registerUser({ email, password });
     console.info('Registered.');
     console.log("registerRes", registerRes)
     return true;
@@ -121,7 +121,7 @@ const registerRes = await app.emailPasswordAuth.registerUser({ email, password }
 async function confirmEmail(token, tokenId) {
   try {
     console.info('Confirming email...');
-    await app.emailPasswordAuth.confirmUser({token, tokenId});
+    await app.emailPasswordAuth.confirmUser({ token, tokenId });
     console.info('Confirmed.');
     return true;
   }
